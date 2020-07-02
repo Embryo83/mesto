@@ -1,0 +1,18 @@
+@import url('__list/elements__list.css');
+@import url('__list-element/elements__list-element.css');
+@import url('__item/elements__item.css');
+@import url('__caption/elements__caption.css');
+@import url('__title/elements__title.css');
+@import url('__like-button/elements__like-button.css');
+
+.elements {
+    font-family: 'Inter', Arial, sans-serif;
+    margin-top: 50px;
+    margin-bottom: 66px;
+}
+
+@media screen and (max-width: 414px) {
+    .elements {
+        margin: 36px 19px 48px;
+    }
+}
