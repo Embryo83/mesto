@@ -1,14 +1,12 @@
 .page__content {
     display: flex;
     flex-direction: column;
-    margin-top: 40px;
-    margin-bottom: 66px;
-    border: 1px solid red;
+    width: 100%;
+    margin: 40px auto 66px;
 }
 
 @media screen and (max-width: 320px) {
     .page__content {
-        margin-top: 42px;
-        margin-bottom: 48px;
+        margin: 42px auto 48px;
     }
 }

@@ -1,31 +1,9 @@
 .elements__list {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(230px, 1fr));
-    /* grid-template-rows: repaet(2, 1fr); */
+    grid-template-columns: repeat(auto-fit, minmax(252px, 1fr));
     grid-gap: 18px 20px;
     list-style: none;
     width: 100%;
     margin: 0;
     padding: 0;
-}
-
-@media screen and (max-width: 768px) {
-    .elements__list {
-        grid-template-columns: repeat(auto-fit, minmax(210px, 1fr));
-        padding: 0 auto;
-    }
-}
-
-@media screen and (max-width: 588px) {
-    .elements__list {
-        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-        padding: 0 auto;
-    }
-}
-
-@media screen and (max-width: 414px) {
-    .elements__list {
-        grid-template-columns: repeat(1, 1fr);
-        /* padding: 0 19px; */
-    }
 }

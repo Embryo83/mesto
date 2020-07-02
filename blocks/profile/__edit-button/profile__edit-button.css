@@ -4,6 +4,7 @@
     background-color: black;
     text-decoration: none;
     border: 1px solid white;
+    outline: none;
     align-content: flex-end;
     background-image: url(../../../images/vector.svg);
     background-repeat: no-repeat;

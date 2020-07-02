@@ -1,8 +1,10 @@
 .elements__list-element {
-    max-width: 282px;
-    width: 100%;
-    margin: 0 auto;
-    /* white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis; */
+    max-width: 100%;
+}
+
+@media screen and (max-width: 578px) {
+    .elements__list-element {
+        max-width: 282px;
+        margin: 0 auto;
+    }
 }
