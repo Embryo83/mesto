@@ -3,10 +3,14 @@
     font-size: 18px;
     line-height: 1.2;
     margin: 0;
+    white-space: nowrap; 
+    overflow: hidden; 
+    text-overflow: ellipsis; 
 }
 
 @media screen and (max-width: 720px) {
     .profile__subtitle {
         font-size: 14px;
+        max-width: 280px;
     }
 }
