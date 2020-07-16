@@ -34,6 +34,7 @@ const popup = document.querySelector('.popup');
 const formElement = popup.querySelector('.popup__form');
 const title = popup.querySelector('.popup__title');
 const submit = popup.querySelector('.popup__submit-button');
+const list = document.querySelector('.elements__list');
 
 let nameInput = popup.querySelector('.popup__input_type_name');
 let jobInput = popup.querySelector('.popup__input_type_job');
@@ -42,13 +43,18 @@ let profileJob = document.querySelector('.profile__subtitle');
 
 const temp = document.querySelector('#elements-template').content;
 
+
 function createInitialElements() {
     for (let i = 0; i < initialCards.length; i ++) {
         const cloneTemp = temp.cloneNode(true);
         cloneTemp.querySelector('.elements__item').style.backgroundImage = 'url(' + initialCards[i].link + ')';
         cloneTemp.querySelector('.elements__title').textContent = initialCards[i].name;
+        cloneTemp.querySelector('.elements__like-button').addEventListener ('click', function (evt) {
+            evt.target.classList.toggle('elements__like-button_active');
+        })
         elementsContainer.append(cloneTemp);
     }
+    
 }
 
 createInitialElements();
@@ -80,6 +86,9 @@ function formSubmitHandler(evt) {
         const cloneTemp = temp.cloneNode(true);
     cloneTemp.querySelector('.elements__item').style.backgroundImage = 'url(' + jobInput.value + ')';
     cloneTemp.querySelector('.elements__title').textContent = nameInput.value;
+    cloneTemp.querySelector('.elements__like-button').addEventListener ('click', function (evt) {
+        evt.target.classList.toggle('elements__like-button_active');
+    })
     elementsContainer.prepend(cloneTemp);
     } else {
     profileName.textContent = nameInput.value;
