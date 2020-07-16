@@ -34,7 +34,6 @@ const popup = document.querySelector('.popup');
 const formElement = popup.querySelector('.popup__form');
 const title = popup.querySelector('.popup__title');
 const submit = popup.querySelector('.popup__submit-button');
-const list = document.querySelector('.elements__list');
 
 let nameInput = popup.querySelector('.popup__input_type_name');
 let jobInput = popup.querySelector('.popup__input_type_job');
@@ -42,6 +41,7 @@ let profileName = document.querySelector('.profile__title');
 let profileJob = document.querySelector('.profile__subtitle');
 
 const temp = document.querySelector('#elements-template').content;
+
 
 
 function createInitialElements() {
@@ -54,7 +54,11 @@ function createInitialElements() {
         })
         elementsContainer.append(cloneTemp);
     }
-    
+    const deleteButton = elementsContainer.querySelector('.elements__delete-button');
+    elementsContainer.addEventListener ('click', function (evt) {
+        if (event.target.className !== 'elements__delete-button') return;
+        evt.target.closest('.elements__list-element').remove();
+    });
 }
 
 createInitialElements();
@@ -83,7 +87,7 @@ function formSubmitHandler(evt) {
     evt.preventDefault();
     const formAddElement = popup.querySelector('.popup__form_type_add-element');
     if (formAddElement) {
-        const cloneTemp = temp.cloneNode(true);
+    const cloneTemp = temp.cloneNode(true);
     cloneTemp.querySelector('.elements__item').style.backgroundImage = 'url(' + jobInput.value + ')';
     cloneTemp.querySelector('.elements__title').textContent = nameInput.value;
     cloneTemp.querySelector('.elements__like-button').addEventListener ('click', function (evt) {
