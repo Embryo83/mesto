@@ -27,10 +27,13 @@ const initialCards = [
 
 const elementsContainer = document.querySelector('.elements__list');
 
-const openPopup = document.querySelector('.profile__edit-button');
+const openPopupEdit = document.querySelector('.profile__edit-button');
+const openPopupAdd = document.querySelector('.profile__add-button');
 const closePopup = document.querySelector('.popup__close-button');
 const popup = document.querySelector('.popup');
 const formElement = popup.querySelector('.popup__form');
+const title = popup.querySelector('.popup__title');
+const submit = popup.querySelector('.popup__submit-button');
 
 let nameInput = popup.querySelector('.popup__input_type_name');
 let jobInput = popup.querySelector('.popup__input_type_job');
@@ -45,29 +48,47 @@ function createInitialElements() {
         cloneTemp.querySelector('.elements__item').style.backgroundImage = 'url(' + initialCards[i].link + ')';
         cloneTemp.querySelector('.elements__title').textContent = initialCards[i].name;
         elementsContainer.append(cloneTemp);
-        console.log(cloneTemp);
     }
 }
 
 createInitialElements();
 
-function popupIsOpen() {
+function popupEditIsOpen() {
     popup.classList.add('popup_is-open');
+    title.textContent = 'Редактировать профиль';
     nameInput.value = profileName.textContent;
     jobInput.value = profileJob.textContent;
 }
 
+function popupAddIsOpen() {
+    popup.classList.add('popup_is-open');
+    title.textContent = 'Новое место';
+    nameInput.value = 'Название';
+    jobInput.value = 'Ссылка на картинку';
+    formElement.classList.add('popup__form_type_add-element');
+}
+
 function popupIsClosed() {
     popup.classList.remove('popup_is-open');
+    formElement.classList.remove('popup__form_type_add-element');
 }
 
 function formSubmitHandler(evt) {
     evt.preventDefault();
+    const formAddElement = popup.querySelector('.popup__form_type_add-element');
+    if (formAddElement) {
+        const cloneTemp = temp.cloneNode(true);
+    cloneTemp.querySelector('.elements__item').style.backgroundImage = 'url(' + jobInput.value + ')';
+    cloneTemp.querySelector('.elements__title').textContent = nameInput.value;
+    elementsContainer.prepend(cloneTemp);
+    } else {
     profileName.textContent = nameInput.value;
     profileJob.textContent = jobInput.value;
+    }
     popupIsClosed();
 }
 
-openPopup.addEventListener ('click', popupIsOpen);
+openPopupEdit.addEventListener ('click', popupEditIsOpen);
+openPopupAdd.addEventListener ('click', popupAddIsOpen);
 closePopup.addEventListener ('click', popupIsClosed);
 formElement.addEventListener ('submit', formSubmitHandler);
