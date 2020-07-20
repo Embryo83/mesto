@@ -20,35 +20,33 @@ const likeButton = document.querySelector('.element__like-button');
 
 const title = popup.querySelector('.popup__title');
 
-const nameInput = popup.querySelector('.popup__input_type_name');
-const jobInput = popup.querySelector('.popup__input_type_job');
-const placeInput = document.querySelector('.popup__input_type_place');
-const linkInput = document.querySelector('.popup__input_type_link');
+const nameInput = popupEdit.querySelector('.popup__input_type_name');
+const jobInput = popupEdit.querySelector('.popup__input_type_job');
+const placeInput = popupAdd.querySelector('.popup__input_type_place');
+const linkInput = popupAdd.querySelector('.popup__input_type_link');
 const profileName = document.querySelector('.profile__title');
 const profileJob = document.querySelector('.profile__subtitle');
+const temp = document.querySelector('#elements-template').content;
 
-function createCard(imageLink, imageTitle) {
-    const temp = document.querySelector('#elements-template').content;
+function createCard(data) {
     const cloneTemp = temp.cloneNode(true);
     const cloneCard = cloneTemp.querySelector('.element__item');
     const cardTitle = cloneTemp.querySelector('.element__title');
-    cloneCard.src = imageLink;
-    cloneCard.alt = imageTitle;
-    cardTitle.textContent = imageTitle;
-    addCard(cloneTemp);
+    cloneCard.src = data.link;
+    cloneCard.alt = data.name;
+    cardTitle.textContent = data.name;
+    return cloneTemp;
 }
 
-function addCard(elem) {
-    elementsContainer.prepend(elem);
+function addCard(data) {
+    elementsContainer.append(createCard(data));
 }
 
-function createInitialElements() {
-    for (let i = (initialCards.length - 1); i >= 0; i --) {
-        createCard(initialCards[i].link, initialCards[i].name, initialCards[i].alt);
-    }
+function addUserCard(data) {
+    elementsContainer.prepend(createCard(data));
 }
 
-createInitialElements();
+initialCards.forEach(addCard);
 
 function openPopup(popupElement) {
     popupElement.classList.add('popup_is-open');
@@ -110,7 +108,11 @@ placeInput.addEventListener('input', function () {
 
 submitPopupAdd.addEventListener ('click', function (evt) {
     evt.preventDefault();
-    createCard(linkInput.value, placeInput.value);
+    const cardData = {
+        link: linkInput.value,
+        name: placeInput.value
+    };
+    addUserCard(cardData);
     linkInput.value = '';
     placeInput.value = '';
     closePopup(popupAdd);
