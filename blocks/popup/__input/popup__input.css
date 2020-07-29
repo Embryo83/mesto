@@ -10,3 +10,7 @@
     line-height: 1.2;
     color: #000000;
 }
+
+/* .popup__input:invalid {
+    border-bottom: 1px solid red;
+} */
