@@ -63,6 +63,13 @@ document.addEventListener ('click', function (evt) {
     }
 });
 
+document.addEventListener ('keydown', function (evt) {
+    const openedPopup = document.querySelector('.popup_is-open');
+    if (openedPopup && evt.keyCode === 27) {
+        closePopup(openedPopup);
+    }
+});
+
 openPopupEdit.addEventListener ('click', function () {
     openPopup(popupEdit);
     nameInput.value = profileName.textContent;
