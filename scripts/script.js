@@ -56,6 +56,13 @@ function closePopup(popupElement) {
     popupElement.classList.remove('popup_is-open');
 }
 
+document.addEventListener ('click', function (evt) {
+    const openedPopup = document.querySelector('.popup_is-open');
+    if (evt.target.classList.contains('popup')) {
+    closePopup(openedPopup);
+    }
+});
+
 openPopupEdit.addEventListener ('click', function () {
     openPopup(popupEdit);
     nameInput.value = profileName.textContent;
