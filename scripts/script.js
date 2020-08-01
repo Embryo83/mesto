@@ -56,6 +56,8 @@ function openPopup(popupElement) {
 function closePopup(popupElement) {
   popupElement.classList.remove("popup_is-open");
   document.removeEventListener("keydown", closeByEsc);
+  submitPopupEdit.disabled = true;
+  submitPopupAdd.disabled = true;
 }
 
 document.addEventListener("click", function (evt) {
