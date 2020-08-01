@@ -18,8 +18,6 @@ const closePopupPhotoBtn = popupPhotoContainer.querySelector(
 const submitPopupEdit = popupEdit.querySelector(".popup__submit-button");
 const submitPopupAdd = popupAdd.querySelector(".popup__submit-button");
 
-const likeButton = document.querySelector(".element__like-button");
-
 const title = popup.querySelector(".popup__title");
 
 const nameInput = popupEdit.querySelector(".popup__input_type_name");
@@ -52,12 +50,12 @@ initialCards.forEach(addCard);
 
 function openPopup(popupElement) {
   popupElement.classList.add("popup_is-open");
-  document.addEventListener('keydown', closeByEsc);
+  document.addEventListener("keydown", closeByEsc);
 }
 
 function closePopup(popupElement) {
   popupElement.classList.remove("popup_is-open");
-  document.removeEventListener('keydown', closeByEsc);
+  document.removeEventListener("keydown", closeByEsc);
 }
 
 document.addEventListener("click", function (evt) {
@@ -67,10 +65,10 @@ document.addEventListener("click", function (evt) {
   }
 });
 
-function closeByEsc (evt) {
+function closeByEsc(evt) {
   const openedPopup = document.querySelector(".popup_is-open");
   if (evt.keyCode === 27) {
-  closePopup(openedPopup);
+    closePopup(openedPopup);
   }
 }
 
@@ -97,17 +95,6 @@ closePopupAddBtn.addEventListener("click", function () {
 
 closePopupPhotoBtn.addEventListener("click", function () {
   closePopup(popupPhotoContainer);
-});
-
-elementsContainer.addEventListener("click", function (evt) {
-  if (evt.target.className !== "element__delete-button") return;
-  evt.target.closest(".element").remove();
-});
-
-elementsContainer.addEventListener("click", function (evt) {
-  if (evt.target.classList.contains("element__like-button")) {
-    evt.target.classList.toggle("element__like-button_active");
-  }
 });
 
 submitPopupEdit.addEventListener("click", function (evt) {
@@ -138,15 +125,24 @@ submitPopupAdd.addEventListener("click", function (evt) {
 
 elementsContainer.addEventListener("click", function (evt) {
   const click = evt.target;
-  if (click.className !== "element__item") return;
-  openPopup(popupPhotoContainer);
-  const container = click.closest("li");
-  const caption = container.querySelector(".element__title");
-  const pic = container.querySelector(".element__item");
-  const link = pic.src;
-  const popupImage = popupPhotoContainer.querySelector(".popup__photo");
-  popupPhotoContainer.querySelector(".popup__caption").textContent =
-    caption.textContent;
-  popupImage.src = link;
-  popupImage.alt = caption.textContent;
+  if (click.classList.contains("element__like-button")) {
+    click.classList.toggle("element__like-button_active");
+  }
+  if (click.classList.contains("element__delete-button")) {
+    click.closest(".element").remove();
+  }
+  if (click.className !== "element__item") {
+    return;
+  } else {
+    openPopup(popupPhotoContainer);
+    const container = click.closest("li");
+    const caption = container.querySelector(".element__title");
+    const pic = container.querySelector(".element__item");
+    const link = pic.src;
+    const popupImage = popupPhotoContainer.querySelector(".popup__photo");
+    popupPhotoContainer.querySelector(".popup__caption").textContent =
+      caption.textContent;
+    popupImage.src = link;
+    popupImage.alt = caption.textContent;
+  }
 });
