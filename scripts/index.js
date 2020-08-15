@@ -88,7 +88,7 @@ function closePopup(popupElement) {
   popupElement.classList.remove("popup_is-open"); 
   document.removeEventListener("keydown", closeByEsc); 
   submitPopupEdit.disabled = true; 
-  submitPopupAdd.disabled = true; 
+  submitPopupAdd.disabled = true;
 }
  
 // закрытие по Escape
@@ -103,7 +103,7 @@ function closeByEsc(evt) {
 function closeByOverlay(evt) {
   const openedPopup = document.querySelector(".popup_is-open"); 
   if (evt.target.classList.contains('popup_is-open')) {
-    closePopup(openedPopup); 
+    closePopup(openedPopup);
   }
 }
 
@@ -112,6 +112,7 @@ function openEditProfile() {
   openPopup(popupEdit); 
   nameInput.value = profileName.textContent; 
   jobInput.value = profileJob.textContent; 
+  // validationEditInput.resetValidation();
 }
 
 // открытие попапа добавления карточки
@@ -126,8 +127,8 @@ closePopupEditBtn.addEventListener("click", function () {
  
 closePopupAddBtn.addEventListener("click", function () { 
   closePopup(popupAdd); 
-  linkInput.value = ""; 
-  placeInput.value = ""; 
+  // linkInput.value = ""; 
+  // placeInput.value = ""; 
 }); 
  
 closePopupPhotoBtn.addEventListener("click", function () { 
@@ -153,8 +154,6 @@ placeInput.addEventListener("input", function () {
 function submitAddCard(evt) {
   evt.preventDefault();
   addUserCard(getCard(linkInput.value, placeInput.value, '#elements-template'));
-  linkInput.value = ""; 
-  placeInput.value = ""; 
   closePopup(popupAdd); 
 }
 
@@ -162,9 +161,20 @@ popupEdit.addEventListener('click', closeByOverlay);
 popupAdd.addEventListener('click', closeByOverlay);
 popupPhotoContainer.addEventListener('click', closeByOverlay);
 
-openPopupEdit.addEventListener('click', openEditProfile);
+openPopupEdit.addEventListener('click', function () {
+  openEditProfile();
+  validationEditInput.resetValidation();
+});
+
 submitPopupEdit.addEventListener('click', submitEditProfile);
-openPopupAdd.addEventListener('click', openAddCard);
+
+openPopupAdd.addEventListener('click', function () {
+  openAddCard();
+  linkInput.value = ""; 
+  placeInput.value = ""; 
+  validationAddInput.resetValidation();
+});
+
 submitPopupAdd.addEventListener('click', submitAddCard);
 
 addInitialCards();
