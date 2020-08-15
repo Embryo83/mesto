@@ -55,12 +55,17 @@ function addUserCard(data) {
   elementsContainer.prepend(data); 
 }
 
+// определение карточки
+function getCard(link, name, cardSelector) {
+  const card = new Card(link, name, cardSelector);
+  const cardElement = card.generateCard();
+  return cardElement;
+}
+
 // добавление начальных карточек
 function addInitialCards() {
   initialCards.forEach((item) => {
-    const card = new Card(item.link, item.name, '#elements-template');
-    const cardElement = card.generateCard();
-    elementsContainer.append(cardElement);
+    elementsContainer.append(getCard(item.link, item.name, '#elements-template'));
   });
 }
 
@@ -146,10 +151,8 @@ placeInput.addEventListener("input", function () {
 
 // сабмит добавления новой карточки
 function submitAddCard(evt) {
-  evt.preventDefault(); 
-  const card = new Card(linkInput.value, placeInput.value, '#elements-template');
-  const cardElement = card.generateCard();
-  addUserCard(cardElement);
+  evt.preventDefault();
+  addUserCard(getCard(linkInput.value, placeInput.value, '#elements-template'));
   linkInput.value = ""; 
   placeInput.value = ""; 
   closePopup(popupAdd); 
