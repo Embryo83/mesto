@@ -1,4 +1,4 @@
-import {openPopupImage} from './script.js';
+import {openPopupImage} from './index.js';
 
 export default class Card {
     constructor(link, name, cardSelector) {
