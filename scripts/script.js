@@ -1,3 +1,16 @@
+import Card from './Card.js';
+import {initialCards} from './initial-cards.js';
+import FormValidator from './FormValidator.js';
+
+const object = {
+  formSelector: ".popup__form",
+  inputSelector: ".popup__input",
+  submitButtonSelector: ".popup__submit-button",
+  inactiveButtonClass: "popup__submit-button_disabled",
+  inputErrorClass: "popup__input_type_error",
+  errorClass: "popup__error_visible"
+};
+
 const elementsContainer = document.querySelector(".elements__list");
 // кнопки открытия попап
 const openPopupEdit = document.querySelector(".profile__edit-button");
@@ -8,6 +21,7 @@ const popup = document.querySelector(".popup");
 const popupEdit = document.querySelector(".popup_type_edit");
 const popupAdd = document.querySelector(".popup_type_add");
 const popupPhotoContainer = document.querySelector(".popup_type_photo");
+
 // кнопки закрытия модальных окон
 const closePopupEditBtn = popupEdit.querySelector(".popup__close-button");
 const closePopupAddBtn = popupAdd.querySelector(".popup__close-button");
@@ -28,123 +42,128 @@ const profileName = document.querySelector(".profile__title");
 const profileJob = document.querySelector(".profile__subtitle");
 const temp = document.querySelector("#elements-template").content;
 
-function createCard(data) {
-  const cloneTemp = temp.cloneNode(true);
-  const cloneCard = cloneTemp.querySelector(".element__item");
-  const cardTitle = cloneTemp.querySelector(".element__title");
-  cloneCard.src = data.link;
-  cloneCard.alt = data.name;
-  cardTitle.textContent = data.name;
-  return cloneTemp;
+const cardImage = temp.querySelector('.element__item');
+const cardCaption = temp.querySelector('.element__title');
+
+const validationEditInput = new FormValidator(popupEdit, object);
+const validationAddInput = new FormValidator(popupAdd, object);
+
+validationEditInput.enableValidation();
+validationAddInput.enableValidation();
+ 
+function addUserCard(data) { 
+  elementsContainer.prepend(data); 
 }
 
-function addCard(data) {
-  elementsContainer.append(createCard(data));
+// добавление начальных карточек
+function addInitialCards() {
+  initialCards.forEach((item) => {
+    const card = new Card(item.link, item.name, '#elements-template');
+    const cardElement = card.generateCard();
+    elementsContainer.append(cardElement);
+  });
 }
 
-function addUserCard(data) {
-  elementsContainer.prepend(createCard(data));
+// открытые попапов
+function openPopup(popupElement) { 
+  popupElement.classList.add("popup_is-open"); 
+  document.addEventListener("keydown", closeByEsc); 
+} 
+
+// открытие попапа фото
+function openPopupImage(link, name) {
+  document.querySelector('.popup__photo').src = link;
+  document.querySelector('.popup__caption').textContent = name;
+  openPopup(popupPhotoContainer);
 }
 
-initialCards.forEach(addCard);
 
-function openPopup(popupElement) {
-  popupElement.classList.add("popup_is-open");
-  document.addEventListener("keydown", closeByEsc);
+// закрытие попапов 
+function closePopup(popupElement) { 
+  popupElement.classList.remove("popup_is-open"); 
+  document.removeEventListener("keydown", closeByEsc); 
+  submitPopupEdit.disabled = true; 
+  submitPopupAdd.disabled = true; 
 }
+ 
+// закрытие по Escape
+function closeByEsc(evt) { 
+  const openedPopup = document.querySelector(".popup_is-open"); 
+  if (evt.keyCode === 27) { 
+    closePopup(openedPopup); 
+  } 
+} 
 
-function closePopup(popupElement) {
-  popupElement.classList.remove("popup_is-open");
-  document.removeEventListener("keydown", closeByEsc);
-  submitPopupEdit.disabled = true;
-  submitPopupAdd.disabled = true;
-}
-
-document.addEventListener("click", function (evt) {
-  const openedPopup = document.querySelector(".popup_is-open");
-  if (evt.target.classList.contains("popup")) {
-    closePopup(openedPopup);
-  }
-});
-
-function closeByEsc(evt) {
-  const openedPopup = document.querySelector(".popup_is-open");
-  if (evt.keyCode === 27) {
-    closePopup(openedPopup);
+// закрытие по overlay
+function closeByOverlay(evt) {
+  const openedPopup = document.querySelector(".popup_is-open"); 
+  if (evt.target.classList.contains('popup_is-open')) {
+    closePopup(openedPopup); 
   }
 }
 
-openPopupEdit.addEventListener("click", function () {
-  openPopup(popupEdit);
-  nameInput.value = profileName.textContent;
-  jobInput.value = profileJob.textContent;
+// открытие попапа редактирование профиля
+function openEditProfile() {
+  openPopup(popupEdit); 
+  nameInput.value = profileName.textContent; 
+  jobInput.value = profileJob.textContent; 
+}
+
+// открытие попапа добавления карточки
+function openAddCard() {
+  openPopup(popupAdd); 
+  title.textContent = "Новое место"; 
+}
+ 
+closePopupEditBtn.addEventListener("click", function () { 
+  closePopup(popupEdit); 
+}); 
+ 
+closePopupAddBtn.addEventListener("click", function () { 
+  closePopup(popupAdd); 
+  linkInput.value = ""; 
+  placeInput.value = ""; 
+}); 
+ 
+closePopupPhotoBtn.addEventListener("click", function () { 
+  closePopup(popupPhotoContainer); 
+}); 
+
+// сабмит изменения данных профиля
+function submitEditProfile(evt) {
+  evt.preventDefault(); 
+  profileName.textContent = nameInput.value; 
+  profileJob.textContent = jobInput.value; 
+  closePopup(popupEdit); 
+}
+ 
+placeInput.addEventListener("input", function () { 
+  placeInput.value = placeInput.value.replace(/[^0-9а-яА-ЯёЁ\s\.\,\?\!]/, ""); 
+  if (!placeInput.value) { 
+    alert("Пишите название на кириллице"); 
+  } 
 });
 
-openPopupAdd.addEventListener("click", function () {
-  openPopup(popupAdd);
-  title.textContent = "Новое место";
-});
+// сабмит добавления новой карточки
+function submitAddCard(evt) {
+  evt.preventDefault(); 
+  const card = new Card(linkInput.value, placeInput.value, '#elements-template');
+  const cardElement = card.generateCard();
+  addUserCard(cardElement);
+  linkInput.value = ""; 
+  placeInput.value = ""; 
+  closePopup(popupAdd); 
+}
 
-closePopupEditBtn.addEventListener("click", function () {
-  closePopup(popupEdit);
-});
+popupEdit.addEventListener('click', closeByOverlay);
+popupAdd.addEventListener('click', closeByOverlay);
+popupPhotoContainer.addEventListener('click', closeByOverlay);
 
-closePopupAddBtn.addEventListener("click", function () {
-  closePopup(popupAdd);
-  linkInput.value = "";
-  placeInput.value = "";
-});
+openPopupEdit.addEventListener('click', openEditProfile);
+submitPopupEdit.addEventListener('click', submitEditProfile);
+openPopupAdd.addEventListener('click', openAddCard);
+submitPopupAdd.addEventListener('click', submitAddCard);
 
-closePopupPhotoBtn.addEventListener("click", function () {
-  closePopup(popupPhotoContainer);
-});
+addInitialCards();
 
-submitPopupEdit.addEventListener("click", function (evt) {
-  evt.preventDefault();
-  profileName.textContent = nameInput.value;
-  profileJob.textContent = jobInput.value;
-  closePopup(popupEdit);
-});
-
-placeInput.addEventListener("input", function () {
-  placeInput.value = placeInput.value.replace(/[^0-9а-яА-ЯёЁ\s\.\,\?\!]/, "");
-  if (!placeInput.value) {
-    alert("Пишите название на кириллице");
-  }
-});
-
-submitPopupAdd.addEventListener("click", function (evt) {
-  evt.preventDefault();
-  const cardData = {
-    link: linkInput.value,
-    name: placeInput.value,
-  };
-  addUserCard(cardData);
-  linkInput.value = "";
-  placeInput.value = "";
-  closePopup(popupAdd);
-});
-
-elementsContainer.addEventListener("click", function (evt) {
-  const click = evt.target;
-  if (click.classList.contains("element__like-button")) {
-    click.classList.toggle("element__like-button_active");
-  }
-  if (click.classList.contains("element__delete-button")) {
-    click.closest(".element").remove();
-  }
-  if (click.className !== "element__item") {
-    return;
-  } else {
-    openPopup(popupPhotoContainer);
-    const container = click.closest("li");
-    const caption = container.querySelector(".element__title");
-    const pic = container.querySelector(".element__item");
-    const link = pic.src;
-    const popupImage = popupPhotoContainer.querySelector(".popup__photo");
-    popupPhotoContainer.querySelector(".popup__caption").textContent =
-      caption.textContent;
-    popupImage.src = link;
-    popupImage.alt = caption.textContent;
-  }
-});
+export {openPopupImage};
