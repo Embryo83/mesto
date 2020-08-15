@@ -111,8 +111,7 @@ function closeByOverlay(evt) {
 function openEditProfile() {
   openPopup(popupEdit); 
   nameInput.value = profileName.textContent; 
-  jobInput.value = profileJob.textContent; 
-  // validationEditInput.resetValidation();
+  jobInput.value = profileJob.textContent;
 }
 
 // открытие попапа добавления карточки
@@ -126,9 +125,7 @@ closePopupEditBtn.addEventListener("click", function () {
 }); 
  
 closePopupAddBtn.addEventListener("click", function () { 
-  closePopup(popupAdd); 
-  // linkInput.value = ""; 
-  // placeInput.value = ""; 
+  closePopup(popupAdd);
 }); 
  
 closePopupPhotoBtn.addEventListener("click", function () { 

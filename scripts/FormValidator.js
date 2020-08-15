@@ -6,8 +6,6 @@ export default class FormValidator {
     this._inactiveButtonClass = settings.inactiveButtonClass;
     this._inputErrorClass = settings.inputErrorClass;
     this._errorClass = settings.errorClass;
-    // this._inputData = Array.from(this._formElement.querySelectorAll(settings.inputSelector));
-    // this._errorData = Array.from(this._formElement.querySelectorAll(settings.inputErrorClass));
   }
 
   _showInputError (inputElement, errorMessage) {
@@ -66,10 +64,6 @@ export default class FormValidator {
   }
 
   resetValidation() {
-    // const inputData = Array.from(this._formElement.querySelectorAll(this._inputSelector));
-    // inputData.forEach(item => {
-    //   this._hideInputError(item);
-    // });
     this._toggleButtonState();
     const inputData = Array.from(this._formElement.querySelectorAll('.popup__input'));
     inputData.forEach(input => {
