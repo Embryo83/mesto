@@ -20,6 +20,7 @@ export default class Card {
 
     _deleteCard(evt) {
       evt.target.parentElement.remove();
+      this._cardSelector = null;
     };
 
     _cardEventListeners() {
