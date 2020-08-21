@@ -27,9 +27,26 @@ export default class FormValidator {
       this._showInputError(
         inputElement,
         inputElement.validationMessage
-      );
+      )
     } else {
         this._hideInputError(inputElement);
+    }
+  }
+
+  _checkInputCyr (inputElement) {
+    inputElement = this._formElement.querySelector('.popup__input_type_place');
+      if (!inputElement.validity.valid && inputElement.value !== "") {
+    this._showInputError(
+      inputElement,
+      "Введите текст на кириллице"
+    )
+    } else if (inputElement.value === "") {
+      this._showInputError(
+        inputElement,
+        inputElement.validationMessage
+      )
+    } else {
+      this._hideInputError(inputElement);
     }
   }
 
@@ -42,6 +59,7 @@ export default class FormValidator {
       inputElement.addEventListener("input", () => {
         this._checkInputValidity(inputElement);
         this._toggleButtonState(this._inputList);
+        this._checkInputCyr(inputElement);
       });
     });
   }

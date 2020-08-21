@@ -140,12 +140,12 @@ function submitEditProfile(evt) {
   closePopup(popupEdit); 
 }
  
-placeInput.addEventListener("input", function () { 
-  placeInput.value = placeInput.value.replace(/[^0-9а-яА-ЯёЁ\s\.\,\?\!]/, ""); 
-  if (!placeInput.value) { 
-    alert("Пишите название на кириллице"); 
-  } 
-});
+// placeInput.addEventListener("input", function () { 
+//   placeInput.value = placeInput.value.replace(/[^0-9а-яА-ЯёЁ\s\.\,\?\!]/, ""); 
+//   if (!placeInput.value) { 
+//     alert("Пишите название на кириллице"); 
+//   } 
+// });
 
 // сабмит добавления новой карточки
 function submitAddCard(evt) {
