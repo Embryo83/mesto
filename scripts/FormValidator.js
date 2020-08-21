@@ -38,7 +38,7 @@ export default class FormValidator {
       if (!inputElement.validity.valid && inputElement.value !== "") {
     this._showInputError(
       inputElement,
-      "Введите текст на кириллице"
+      "Допустимые символы: А-Я, 0-9 и (.,!?:;-)"
     )
     } else if (inputElement.value === "") {
       this._showInputError(
