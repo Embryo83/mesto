@@ -6,6 +6,7 @@ export default class FormValidator {
     this._inactiveButtonClass = settings.inactiveButtonClass;
     this._inputErrorClass = settings.inputErrorClass;
     this._errorClass = settings.errorClass;
+    this._errorLine = settings.errorLine;
   }
 
   _showInputError (inputElement, errorMessage) {
@@ -33,23 +34,6 @@ export default class FormValidator {
     }
   }
 
-  _checkInputCyr (inputElement) {
-    inputElement = this._formElement.querySelector('.popup__input_type_place');
-      if (!inputElement.validity.valid && inputElement.value !== "") {
-    this._showInputError(
-      inputElement,
-      "Допустимые символы: А-Я, 0-9 и (.,!?:;-)"
-    )
-    } else if (inputElement.value === "") {
-      this._showInputError(
-        inputElement,
-        inputElement.validationMessage
-      )
-    } else {
-      this._hideInputError(inputElement);
-    }
-  }
-
   _setEventListeners() {
     this._inputList = Array.from(this._formElement.querySelectorAll(this._inputSelector)
     );
@@ -59,7 +43,6 @@ export default class FormValidator {
       inputElement.addEventListener("input", () => {
         this._checkInputValidity(inputElement);
         this._toggleButtonState(this._inputList);
-        this._checkInputCyr(inputElement);
       });
     });
   }
@@ -83,11 +66,12 @@ export default class FormValidator {
 
   resetValidation() {
     this._toggleButtonState();
-    const inputData = Array.from(this._formElement.querySelectorAll('.popup__input'));
+    const inputData = Array.from(this._formElement.querySelectorAll(this._inputSelector));
     inputData.forEach(input => {
       input.classList.remove(this._inputErrorClass);
     });
     const errorData = Array.from(this._formElement.querySelectorAll('.popup__error'));
+    console.log(this._errorLine);
     errorData.forEach(error => {
       error.classList.remove(this._errorClass);
       error.textContent = "";
