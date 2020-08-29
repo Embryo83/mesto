@@ -71,7 +71,6 @@ export default class FormValidator {
       input.classList.remove(this._inputErrorClass);
     });
     const errorData = Array.from(this._formElement.querySelectorAll('.popup__error'));
-    console.log(this._errorLine);
     errorData.forEach(error => {
       error.classList.remove(this._errorClass);
       error.textContent = "";

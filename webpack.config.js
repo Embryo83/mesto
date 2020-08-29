@@ -1,7 +1,6 @@
 const path = require('path');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
-​
 module.exports = {
   mode: 'none',
   entry: { main: './src/pages/index.js' },
@@ -29,6 +28,7 @@ module.exports = {
           'postcss-loader'
         ],
       },
+
       {
         test: /\.html$/,
         loader: 'html-loader',
