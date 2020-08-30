@@ -7,27 +7,11 @@ export default class Card {
     }
   
     _getTemplate() {
-      return this._cardSelector.cloneNode(true);
-    }
-
-    _likeToggle(evt) {
-      evt.target.classList.toggle('element__like-button_active');
-    }
-
-    _deleteCard(evt) {
-      evt.target.parentElement.remove();
-      this._cardSelector = null;
-    };
-
-    _setEventListeners() {
-      this._card.querySelector('.element__like-button')
-      .addEventListener('click',this._likeToggle);
-      this._card.querySelector('.element__delete-button')
-      .addEventListener('click', this._deleteCard);
-      this._card.querySelector('.element__item')
-      .addEventListener('click', () => {
-         this._handlerCardClick(this._link, this._name);
-      });
+      return document
+      .querySelector(this._cardSelector)
+      .content
+      .querySelector('.element')
+            .cloneNode(true);
     }
 
     generateCard() {
@@ -39,5 +23,25 @@ export default class Card {
       elemName.textContent = this._name;
       this._setEventListeners();
       return this._card;
+    }
+
+    _likeToggle() {
+      this._card.querySelector('.element__like-button').classList.toggle('element__like-button_active');
+    }
+
+    _deleteCard() {
+      this._card.remove();
+      this._cardSelector = null;
+    }
+
+    _setEventListeners() {
+      this._card.querySelector('.element__like-button')
+      .addEventListener('click', () => this._likeToggle());
+      this._card.querySelector('.element__delete-button')
+      .addEventListener('click', () => this._deleteCard());
+      this._card.querySelector('.element__item')
+      .addEventListener('click', () => {
+         this._handlerCardClick(this._link, this._name);
+      });
     }
   }

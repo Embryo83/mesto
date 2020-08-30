@@ -46,10 +46,6 @@ const placeInput = popupAdd.querySelector(".popup__input_type_place");
 const linkInput = popupAdd.querySelector(".popup__input_type_link");
 const profileName = document.querySelector(".profile__title");
 const profileJob = document.querySelector(".profile__subtitle");
-const temp = document.querySelector("#elements-template").content;
-
-const cardImage = temp.querySelector('.element__item');
-const cardCaption = temp.querySelector('.element__title');
 
 const validationEditInput = new FormValidator(popupEdit, object);
 const validationAddInput = new FormValidator(popupAdd, object);
@@ -59,7 +55,7 @@ validationAddInput.enableValidation();
 
 // определение карточки
 function getCard(link, name) {
-  const card = new Card(link, name, temp, handlerCardClick);
+  const card = new Card(link, name, '#elements-template', handlerCardClick);
   const cardElement = card.generateCard();
   return cardElement;
 }
