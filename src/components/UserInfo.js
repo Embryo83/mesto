@@ -12,9 +12,9 @@ export default class UserInfo {
       }
   }
 
-  setUserInfo(data) {
-    this._name.textContent = data.value;
-    this._job.textContent = data.value;
+  setUserInfo(name, job) {
+    this._name.textContent = name.value;
+    this._job.textContent = job.value;
   }
 
   setNewAvatar(link) {
