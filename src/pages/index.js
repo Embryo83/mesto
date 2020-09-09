@@ -21,11 +21,13 @@ const elementsContainer = document.querySelector(".elements__list");
 // кнопки открытия попап
 const openPopupEdit = document.querySelector(".profile__edit-button");
 const openPopupAdd = document.querySelector(".profile__add-button");
+const openPopupAvatarEdit = document.querySelector(".profile__avatar-button");
 
 const popup = document.querySelector(".popup");
 // модальные окна
 const popupEdit = document.querySelector(".popup_type_edit");
 const popupAdd = document.querySelector(".popup_type_add");
+const popupAvatar = document.querySelector(".popup_type_avatar")
 const popupPhotoContainer = document.querySelector(".popup_type_photo");
 
 // кнопки закрытия модальных окон
@@ -44,14 +46,18 @@ const nameInput = popupEdit.querySelector(".popup__input_type_name");
 const jobInput = popupEdit.querySelector(".popup__input_type_job");
 const placeInput = popupAdd.querySelector(".popup__input_type_place");
 const linkInput = popupAdd.querySelector(".popup__input_type_link");
+const linkAvatarInput = popupAvatar.querySelector(".popup__input_type_ava")
 const profileName = document.querySelector(".profile__title");
 const profileJob = document.querySelector(".profile__subtitle");
+const profileAvatar = document.querySelector(".profile__avatar");
 
 const validationEditInput = new FormValidator(popupEdit, object);
 const validationAddInput = new FormValidator(popupAdd, object);
+const validationAvatarInput = new FormValidator(popupAvatar, object);
 
 validationEditInput.enableValidation();
 validationAddInput.enableValidation();
+validationAvatarInput.enableValidation();
 
 // определение карточки
 function getCard(link, name) {
@@ -83,6 +89,12 @@ const user = new UserInfo({
   job: profileJob
 });
 
+//открытие попапа редактирования аватара
+const openEditAvatar = new PopupWithForm(popupAvatar, () => {
+  user.setNewAvatar(linkAvatarInput.value);
+  openEditAvatar.close();
+});
+
 // открытие попапа редактирование профиля
 const openEditProfile = new PopupWithForm(popupEdit, () => {
   user.setUserInfo(nameInput, jobInput);
@@ -92,11 +104,19 @@ const openEditProfile = new PopupWithForm(popupEdit, () => {
 // открытие попапа добавления карточки
 const openAddCard = new PopupWithForm(popupAdd, (link, name) => {
   cards.addItem(getCard(linkInput.value, placeInput.value));
+  console.log(linkInput.value);
   openAddCard.close();
 });
 
+
 openEditProfile.setEventListeners();
 openAddCard.setEventListeners();
+openEditAvatar.setEventListeners();
+
+openPopupAvatarEdit.addEventListener('click', function () {
+  openEditAvatar.open();
+  validationAvatarInput.resetValidation();
+})
 
 openPopupEdit.addEventListener('click', function () {
   openEditProfile.open();
