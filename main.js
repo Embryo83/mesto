@@ -767,9 +767,9 @@ var UserInfo = /*#__PURE__*/function () {
     }
   }, {
     key: "setUserInfo",
-    value: function setUserInfo(data) {
-      this._name.textContent = data.value;
-      this._job.textContent = data.value;
+    value: function setUserInfo(name, job) {
+      this._name.textContent = name.value;
+      this._job.textContent = job.value;
     }
   }, {
     key: "setNewAvatar",
