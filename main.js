@@ -99,6 +99,10 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _components_PopupWithImage_js__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(6);
 /* harmony import */ var _components_PopupWithForm_js__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(8);
 /* harmony import */ var _components_UserInfo_js__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(9);
+/* harmony import */ var _components_Api_js__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(10);
+/* harmony import */ var _components_PopupConfirm_js__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(11);
+
+
 
 
 
@@ -115,101 +119,194 @@ var object = {
   inputErrorClass: "popup__input_type_error",
   errorClass: "popup__error_visible",
   errorLine: "popup__error"
-};
-var elementsContainer = document.querySelector(".elements__list"); // кнопки открытия попап
+}; // кнопки открытия попап
 
 var openPopupEdit = document.querySelector(".profile__edit-button");
 var openPopupAdd = document.querySelector(".profile__add-button");
-var openPopupAvatarEdit = document.querySelector(".profile__avatar-button");
-var popup = document.querySelector(".popup"); // модальные окна
+var openPopupAvatarEdit = document.querySelector(".profile__avatar-button"); // модальные окна
 
 var popupEdit = document.querySelector(".popup_type_edit");
 var popupAdd = document.querySelector(".popup_type_add");
 var popupAvatar = document.querySelector(".popup_type_avatar");
-var popupPhotoContainer = document.querySelector(".popup_type_photo"); // кнопки закрытия модальных окон
-
-var closePopupEditBtn = popupEdit.querySelector(".popup__close-button");
-var closePopupAddBtn = popupAdd.querySelector(".popup__close-button");
-var closePopupPhotoBtn = popupPhotoContainer.querySelector(".popup__close-button"); // кнопки submit модальных окон
-
-var submitPopupEdit = popupEdit.querySelector(".popup__submit-button");
-var submitPopupAdd = popupAdd.querySelector(".popup__submit-button");
-var title = popup.querySelector(".popup__title");
 var nameInput = popupEdit.querySelector(".popup__input_type_name");
 var jobInput = popupEdit.querySelector(".popup__input_type_job");
 var placeInput = popupAdd.querySelector(".popup__input_type_place");
 var linkInput = popupAdd.querySelector(".popup__input_type_link");
-var linkAvatarInput = popupAvatar.querySelector(".popup__input_type_ava");
-var profileName = document.querySelector(".profile__title");
-var profileJob = document.querySelector(".profile__subtitle");
-var profileAvatar = document.querySelector(".profile__avatar");
-var validationEditInput = new _components_FormValidator_js__WEBPACK_IMPORTED_MODULE_3__["default"](popupEdit, object);
-var validationAddInput = new _components_FormValidator_js__WEBPACK_IMPORTED_MODULE_3__["default"](popupAdd, object);
-var validationAvatarInput = new _components_FormValidator_js__WEBPACK_IMPORTED_MODULE_3__["default"](popupAvatar, object);
-validationEditInput.enableValidation();
-validationAddInput.enableValidation();
-validationAvatarInput.enableValidation(); // определение карточки
+var profileAvatar = document.querySelector(".profile__avatar"); // let userId = '5955e23ed94608a68dcb0e03';
 
-function getCard(link, name) {
-  var card = new _components_Card_js__WEBPACK_IMPORTED_MODULE_1__["default"](link, name, '#elements-template', handlerCardClick);
-  var cardElement = card.generateCard();
-  return cardElement;
-} // добавление начальных карточек
+var apiConfig = {
+  baseUrl: 'https://mesto.nomoreparties.co/v1/cohort-15',
+  token: 'f1c23b59-12ef-41ca-b659-2fe3930a6862'
+};
+var userConfig = {
+  profileName: '.profile__title',
+  profileJob: '.profile__subtitle'
+};
+var user = new _components_UserInfo_js__WEBPACK_IMPORTED_MODULE_7__["default"](userConfig);
+var openPopupImage = new _components_PopupWithImage_js__WEBPACK_IMPORTED_MODULE_5__["default"]('.popup_type_photo');
+var popupEditProfile = new _components_PopupWithForm_js__WEBPACK_IMPORTED_MODULE_6__["default"]('.popup_type_edit', editSubmitHandler);
+var popupAddCard = new _components_PopupWithForm_js__WEBPACK_IMPORTED_MODULE_6__["default"]('.popup_type_add', addCardSubmitHandler);
+var popupConfirmDelete = new _components_PopupConfirm_js__WEBPACK_IMPORTED_MODULE_9__["default"]('.popup_type_delete', confirmSubmitHandler);
+var popupChangeAvatar = new _components_PopupWithForm_js__WEBPACK_IMPORTED_MODULE_6__["default"]('.popup_type_avatar', avatarSubmitHandler);
+var api = new _components_Api_js__WEBPACK_IMPORTED_MODULE_8__["default"](apiConfig);
+var userData = {};
+var cardsGrid = {};
+var getUserData = api.getUserInfo();
+var getCards = api.getInitialCards();
+var getData = [getUserData, getCards];
+Promise.all(getData).then(function (data) {
+  userData = data[0];
+  var cardsData = data[1];
+  user.setUserInfo({
+    "name": userData.name,
+    "job": userData.about
+  });
+  profileAvatar.src = userData.avatar;
+  cardsGrid = new _components_Section_js__WEBPACK_IMPORTED_MODULE_4__["default"]({
+    items: cardsData,
+    renderer: function renderer(item) {
+      var card = new _components_Card_js__WEBPACK_IMPORTED_MODULE_1__["default"](item, '#elements-template', userData._id, openCardImage, openPopupConfirm, likeHandler);
+      var cardElement = card.generateCard();
+      cardsGrid.addItem(cardElement);
+    }
+  }, '.elements__list');
+  cardsGrid.renderItems(); // слушатели попапов
+
+  popupChangeAvatar.setEventListeners();
+  popupConfirmDelete.setEventListeners();
+  popupEditProfile.setEventListeners();
+  popupAddCard.setEventListeners();
+  openPopupImage.setEventListeners(); // валидаторы форм
+
+  var validationEditInput = new _components_FormValidator_js__WEBPACK_IMPORTED_MODULE_3__["default"](popupEdit, object);
+  validationEditInput.enableValidation();
+  var validationAddInput = new _components_FormValidator_js__WEBPACK_IMPORTED_MODULE_3__["default"](popupAdd, object);
+  validationAddInput.enableValidation();
+  var validationAvatarInput = new _components_FormValidator_js__WEBPACK_IMPORTED_MODULE_3__["default"](popupAvatar, object);
+  validationAvatarInput.enableValidation();
+  openPopupEdit.addEventListener('click', function () {
+    popupEditProfile.open();
+    var userInfo = user.getUserInfo();
+    nameInput.value = userInfo.name;
+    jobInput.value = userInfo.job;
+    validationEditInput.resetValidation();
+  });
+  openPopupAdd.addEventListener('click', function () {
+    popupAddCard.open();
+    validationAddInput.resetValidation();
+  });
+  openPopupAvatarEdit.addEventListener('click', function () {
+    popupChangeAvatar.open();
+    validationAvatarInput.resetValidation();
+  });
+}).catch(function (err) {
+  console.log(err);
+}); // функция открытия попапа подтверждения удаления карточки
+
+function openPopupConfirm(id, evt) {
+  popupConfirmDelete.cardId = id;
+  popupConfirmDelete.elem = evt.target.parentElement;
+  popupConfirmDelete.open();
+} // функция удаления карточки
 
 
-var cards = new _components_Section_js__WEBPACK_IMPORTED_MODULE_4__["default"]({
-  items: _scripts_initial_cards_js__WEBPACK_IMPORTED_MODULE_2__["initialCards"],
-  renderer: function renderer(item) {
-    cards.addItem(getCard(item.link, item.name));
+function confirmSubmitHandler() {
+  popupConfirmDelete._confirmBtn.textContent = 'Удаление...';
+  api.deleteCard(popupConfirmDelete.cardId).then(function (_) {
+    popupConfirmDelete.elem.remove();
+    popupConfirmDelete.elem = null;
+    popupConfirmDelete.close();
+  }).catch(function (err) {
+    console.log(err);
+  }).finally(function () {
+    popupConfirmDelete._confirmBtn.textContent = 'Да';
+  });
+} // функция обновления аватара
+
+
+function avatarSubmitHandler(data) {
+  var _this = this;
+
+  popupChangeAvatar._submitBtn.textContent = 'Сохранение...';
+  api.editAvatar(data).then(function (res) {
+    profileAvatar.src = res.avatar;
+
+    _this.close();
+  }).catch(function (err) {
+    console.log(err);
+  }).finally(function () {
+    popupChangeAvatar._submitBtn.textContent = 'Сохранить';
+  });
+} // функция лайков
+
+
+function likeHandler(id, evt) {
+  if (evt.target.classList.contains('element__like-button_active')) {
+    api.deleteLike(id).then(function (res) {
+      evt.target.nextElementSibling.textContent = res.likes.length;
+      evt.target.classList.remove('element__like-button_active');
+    }).catch(function (err) {
+      console.log(err);
+    });
+  } else {
+    api.addLike(id).then(function (res) {
+      evt.target.nextElementSibling.textContent = res.likes.length;
+      evt.target.classList.add('element__like-button_active');
+    }).catch(function (err) {
+      console.log(err);
+    });
   }
-}, elementsContainer);
-cards.renderItems(); // открытие попапа фото
+} // функция открытия изображения карточки
 
-var openPopupImage = new _components_PopupWithImage_js__WEBPACK_IMPORTED_MODULE_5__["default"](popupPhotoContainer);
-openPopupImage.setEventListeners();
 
-function handlerCardClick(link, name) {
-  openPopupImage.open(link, name);
+function openCardImage(name, link) {
+  openPopupImage.open(name, link);
+} // функция нажатия на сабмит профиля
+
+
+function editSubmitHandler(data) {
+  var _this2 = this;
+
+  popupEditProfile._submitBtn.textContent = "Сохранение...";
+  api.editProfile(data.name, data.job).then(function (res) {
+    user.setUserInfo({
+      name: res.name,
+      job: res.about
+    });
+
+    _this2.close();
+  }).catch(function (err) {
+    console.log(err);
+  }).finally(function () {
+    popupEditProfile._submitBtn.textContent = 'Сохранить';
+  });
+} // функция добавления новой карточки
+
+
+function addCardSubmitHandler(data) {
+  var _this3 = this;
+
+  popupAddCard._submitBtn.textContent = 'Сохранение...';
+  api.addNewCard(data.place, data.link).then(function (res) {
+    var card = new _components_Card_js__WEBPACK_IMPORTED_MODULE_1__["default"]({
+      name: res.name,
+      link: res.link,
+      likes: res.likes,
+      owner: res.owner,
+      _id: res._id
+    }, '#elements-template', userData._id, openCardImage, openPopupConfirm, likeHandler);
+    var cardElement = card.generateCard();
+    cardsGrid.addNewItem(cardElement);
+
+    _this3.close();
+  }).catch(function (err) {
+    console.log(err);
+  }).finally(function () {
+    popupAddCard._submitBtn.textContent = 'Сохранить';
+  });
+  placeInput.value = '';
+  linkInput.value = '';
 }
-
-var user = new _components_UserInfo_js__WEBPACK_IMPORTED_MODULE_7__["default"]({
-  name: profileName,
-  job: profileJob
-}); //открытие попапа редактирования аватара
-
-var openEditAvatar = new _components_PopupWithForm_js__WEBPACK_IMPORTED_MODULE_6__["default"](popupAvatar, function () {
-  user.setNewAvatar(linkAvatarInput.value);
-  openEditAvatar.close();
-}); // открытие попапа редактирование профиля
-
-var openEditProfile = new _components_PopupWithForm_js__WEBPACK_IMPORTED_MODULE_6__["default"](popupEdit, function () {
-  user.setUserInfo(nameInput, jobInput);
-  openEditProfile.close();
-}); // открытие попапа добавления карточки
-
-var openAddCard = new _components_PopupWithForm_js__WEBPACK_IMPORTED_MODULE_6__["default"](popupAdd, function (link, name) {
-  cards.addItem(getCard(linkInput.value, placeInput.value));
-  console.log(linkInput.value);
-  openAddCard.close();
-});
-openEditProfile.setEventListeners();
-openAddCard.setEventListeners();
-openEditAvatar.setEventListeners();
-openPopupAvatarEdit.addEventListener('click', function () {
-  openEditAvatar.open();
-  validationAvatarInput.resetValidation();
-});
-openPopupEdit.addEventListener('click', function () {
-  openEditProfile.open();
-  var userInfo = user.getUserInfo();
-  nameInput.value = userInfo.name;
-  jobInput.value = userInfo.job;
-  validationEditInput.resetValidation();
-});
-openPopupAdd.addEventListener('click', function () {
-  openAddCard.open();
-  validationAddInput.resetValidation();
-});
 
 /***/ }),
 /* 1 */
@@ -231,13 +328,19 @@ function _defineProperties(target, props) { for (var i = 0; i < props.length; i+
 function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); return Constructor; }
 
 var Card = /*#__PURE__*/function () {
-  function Card(link, name, cardSelector, handlerCardClick) {
+  function Card(data, cardSelector, myId, openCardImage, openPopupConfirm, likeHandler) {
     _classCallCheck(this, Card);
 
-    this._link = link;
-    this._name = name;
+    this._link = data.link;
+    this._name = data.name;
+    this._likes = data.likes;
+    this._cardId = data._id;
+    this._myId = myId;
     this._cardSelector = cardSelector;
-    this._handlerCardClick = handlerCardClick;
+    this._owner = data.owner;
+    this._openCardImage = openCardImage;
+    this._likeHandler = likeHandler;
+    this._openPopupConfirm = openPopupConfirm;
   }
 
   _createClass(Card, [{
@@ -246,50 +349,53 @@ var Card = /*#__PURE__*/function () {
       return document.querySelector(this._cardSelector).content.querySelector('.element').cloneNode(true);
     }
   }, {
+    key: "_setEventListeners",
+    value: function _setEventListeners(cardImage) {
+      var _this = this;
+
+      this._card.querySelector('.element__like-button').addEventListener('click', function (evt) {
+        _this._likeHandler(_this._cardId, evt);
+      });
+
+      cardImage.addEventListener('click', function () {
+        return _this._openCardImage(_this._name, _this._link);
+      });
+    }
+  }, {
     key: "generateCard",
     value: function generateCard() {
+      var _this2 = this;
+
       this._card = this._getTemplate();
 
       var elemImage = this._card.querySelector('.element__item');
 
       var elemName = this._card.querySelector('.element__title');
 
+      var sumLikes = this._card.querySelector('.element__like-counter');
+
       elemImage.src = this._link;
       elemImage.alt = this._name;
       elemName.textContent = this._name;
+      sumLikes.textContent = this._likes.length;
 
-      this._setEventListeners();
+      if (this._likes.some(function (like) {
+        return like._id === _this2._myId;
+      })) {
+        this._card.querySelector('.element__like-button').classList.add('element__like-button_active');
+      }
+
+      if (this._myId === this._owner._id) {
+        this._card.querySelector('.element__delete-button').addEventListener("click", function (evt) {
+          _this2._openPopupConfirm(_this2._cardId, evt);
+        });
+      } else {
+        this._card.querySelector('.element__delete-button').remove();
+      }
+
+      this._setEventListeners(elemImage);
 
       return this._card;
-    }
-  }, {
-    key: "_likeToggle",
-    value: function _likeToggle() {
-      this._card.querySelector('.element__like-button').classList.toggle('element__like-button_active');
-    }
-  }, {
-    key: "_deleteCard",
-    value: function _deleteCard() {
-      this._card.remove();
-
-      this._cardSelector = null;
-    }
-  }, {
-    key: "_setEventListeners",
-    value: function _setEventListeners() {
-      var _this = this;
-
-      this._card.querySelector('.element__like-button').addEventListener('click', function () {
-        return _this._likeToggle();
-      });
-
-      this._card.querySelector('.element__delete-button').addEventListener('click', function () {
-        return _this._deleteCard();
-      });
-
-      this._card.querySelector('.element__item').addEventListener('click', function () {
-        _this._handlerCardClick(_this._link, _this._name);
-      });
     }
   }]);
 
@@ -476,7 +582,7 @@ var Section = /*#__PURE__*/function () {
 
     this._items = items;
     this._renderer = renderer;
-    this._containerSelector = containerSelector;
+    this._containerSelector = document.querySelector(containerSelector);
   }
 
   _createClass(Section, [{
@@ -484,13 +590,18 @@ var Section = /*#__PURE__*/function () {
     value: function renderItems() {
       var _this = this;
 
-      this._items.forEach(function (item) {
-        return _this._renderer(item);
+      this._items.forEach(function (items) {
+        _this._renderer(items);
       });
     }
   }, {
     key: "addItem",
     value: function addItem(elem) {
+      this._containerSelector.append(elem);
+    }
+  }, {
+    key: "addNewItem",
+    value: function addNewItem(elem) {
       this._containerSelector.prepend(elem);
     }
   }]);
@@ -554,7 +665,7 @@ var PopupWithImage = /*#__PURE__*/function (_Popup) {
 
   _createClass(PopupWithImage, [{
     key: "open",
-    value: function open(link, name) {
+    value: function open(name, link) {
       this._image.src = link;
       this._caption.alt = name;
       this._caption.textContent = name;
@@ -585,8 +696,7 @@ var Popup = /*#__PURE__*/function () {
   function Popup(popupSelector) {
     _classCallCheck(this, Popup);
 
-    this._popupSelector = popupSelector;
-    this._closeButton = this._popupSelector.querySelector('.popup__close-button');
+    this._popupSelector = document.querySelector(popupSelector);
   }
 
   _createClass(Popup, [{
@@ -625,6 +735,8 @@ var Popup = /*#__PURE__*/function () {
     key: "setEventListeners",
     value: function setEventListeners() {
       var _this = this;
+
+      this._closeButton = this._popupSelector.querySelector('.popup__close-button');
 
       this._closeButton.addEventListener('click', function () {
         _this.close();
@@ -684,8 +796,10 @@ var PopupWithForm = /*#__PURE__*/function (_Popup) {
     _classCallCheck(this, PopupWithForm);
 
     _this = _super.call(this, popupSelector);
+    _this._submitBtn = _this._popupSelector.querySelector('.popup__submit-button');
     _this._formSubmitHandler = formSubmitHandler;
-    _this._form = popupSelector.querySelector('.popup__form');
+    _this._popupForm = _this._popupSelector.querySelector('.popup__form');
+    _this._formSubmit = _this._formSubmit.bind(_assertThisInitialized(_this));
     return _this;
   }
 
@@ -694,36 +808,36 @@ var PopupWithForm = /*#__PURE__*/function (_Popup) {
     value: function _getInputValues() {
       var _this2 = this;
 
-      this._inputList = this._form.querySelectorAll('.popup__input');
+      this._inputList = this._popupForm.querySelectorAll('.popup__input');
       this._formValues = {};
 
-      this._inputList.forEach(function (input) {
-        _this2._formValues[input.name] = input.value;
+      this._inputList.forEach(function (item) {
+        _this2._formValues[item.name] = item.value;
       });
 
       return this._formValues;
     }
   }, {
+    key: "_formSubmit",
+    value: function _formSubmit(evt) {
+      evt.preventDefault();
+      this._inputValues = this._getInputValues();
+
+      this._formSubmitHandler(this._inputValues);
+    }
+  }, {
     key: "setEventListeners",
     value: function setEventListeners() {
-      var _this3 = this;
-
       _get(_getPrototypeOf(PopupWithForm.prototype), "setEventListeners", this).call(this);
 
-      this._form.addEventListener('submit', function (evt) {
-        evt.preventDefault();
-
-        _this3._formSubmitHandler(_this3._getInputValues());
-
-        _this3.close();
-      });
+      this._popupForm.addEventListener('submit', this._formSubmit);
     }
   }, {
     key: "close",
     value: function close() {
       _get(_getPrototypeOf(PopupWithForm.prototype), "close", this).call(this);
 
-      this._form.reset();
+      this._popupForm.reset();
     }
   }]);
 
@@ -747,39 +861,250 @@ function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _d
 
 var UserInfo = /*#__PURE__*/function () {
   function UserInfo(_ref) {
-    var name = _ref.name,
-        job = _ref.job;
+    var profileName = _ref.profileName,
+        profileJob = _ref.profileJob;
 
     _classCallCheck(this, UserInfo);
 
-    this._name = name;
-    this._job = job;
-    this._avatar = document.querySelector('.profile__avatar');
+    this._name = document.querySelector(profileName);
+    this._job = document.querySelector(profileJob);
   }
 
   _createClass(UserInfo, [{
     key: "getUserInfo",
     value: function getUserInfo() {
-      return {
-        name: this._name.textContent,
-        job: this._job.textContent
-      };
+      var userData = {};
+      userData.name = this._name.textContent;
+      userData.job = this._job.textContent;
+      return userData;
     }
   }, {
     key: "setUserInfo",
-    value: function setUserInfo(name, job) {
-      this._name.textContent = name.value;
-      this._job.textContent = job.value;
-    }
-  }, {
-    key: "setNewAvatar",
-    value: function setNewAvatar(link) {
-      this._avatar.src = link;
+    value: function setUserInfo(_ref2) {
+      var name = _ref2.name,
+          job = _ref2.job;
+      this._name.textContent = name;
+      this._job.textContent = job;
     }
   }]);
 
   return UserInfo;
 }();
+
+
+
+/***/ }),
+/* 10 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "default", function() { return Api; });
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }
+
+function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); return Constructor; }
+
+var Api = /*#__PURE__*/function () {
+  function Api(_ref) {
+    var baseUrl = _ref.baseUrl,
+        token = _ref.token;
+
+    _classCallCheck(this, Api);
+
+    this._baseUrl = baseUrl;
+    this._token = token;
+  }
+
+  _createClass(Api, [{
+    key: "checkRes",
+    value: function checkRes(res) {
+      if (res.ok) {
+        return res.json();
+      } else {
+        return Promise.reject('Ошибка сервера');
+      }
+    }
+  }, {
+    key: "getUserInfo",
+    value: function getUserInfo() {
+      return fetch("".concat(this._baseUrl, "/users/me"), {
+        method: 'GET',
+        headers: {
+          authorization: this._token
+        }
+      }).then(this.checkRes);
+    }
+  }, {
+    key: "getInitialCards",
+    value: function getInitialCards() {
+      return fetch("".concat(this._baseUrl, "/cards"), {
+        method: "GET",
+        headers: {
+          authorization: this._token
+        }
+      }).then(this.checkRes);
+    }
+  }, {
+    key: "addNewCard",
+    value: function addNewCard(name, link) {
+      return fetch("".concat(this._baseUrl, "/cards"), {
+        method: 'POST',
+        headers: {
+          authorization: this._token,
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+          name: name,
+          link: link
+        })
+      }).then(this.checkRes);
+    }
+  }, {
+    key: "deleteCard",
+    value: function deleteCard(id) {
+      return fetch("".concat(this._baseUrl, "/cards/").concat(id), {
+        method: 'DELETE',
+        headers: {
+          authorization: this._token
+        }
+      }).then(this.checkRes);
+    }
+  }, {
+    key: "addLike",
+    value: function addLike(id) {
+      return fetch("".concat(this._baseUrl, "/cards/likes/").concat(id), {
+        method: 'PUT',
+        headers: {
+          authorization: this._token
+        }
+      }).then(this.checkRes);
+    }
+  }, {
+    key: "deleteLike",
+    value: function deleteLike(id) {
+      return fetch("".concat(this._baseUrl, "/cards/likes/").concat(id), {
+        method: 'DELETE',
+        headers: {
+          authorization: this._token
+        }
+      }).then(this.checkRes);
+    }
+  }, {
+    key: "editProfile",
+    value: function editProfile(name, about) {
+      return fetch("".concat(this._baseUrl, "/users/me"), {
+        method: 'PATCH',
+        headers: {
+          authorization: this._token,
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+          name: name,
+          about: about
+        })
+      }).then(this.checkRes);
+    }
+  }, {
+    key: "editAvatar",
+    value: function editAvatar(url) {
+      return fetch("".concat(this._baseUrl, "/users/me/avatar"), {
+        method: 'PATCH',
+        headers: {
+          authorization: this._token,
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+          avatar: url.link
+        })
+      }).then(this.checkRes);
+    }
+  }]);
+
+  return Api;
+}();
+
+
+
+/***/ }),
+/* 11 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "default", function() { return PopupConfirm; });
+/* harmony import */ var _Popup_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(7);
+function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }
+
+function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); return Constructor; }
+
+function _get(target, property, receiver) { if (typeof Reflect !== "undefined" && Reflect.get) { _get = Reflect.get; } else { _get = function _get(target, property, receiver) { var base = _superPropBase(target, property); if (!base) return; var desc = Object.getOwnPropertyDescriptor(base, property); if (desc.get) { return desc.get.call(receiver); } return desc.value; }; } return _get(target, property, receiver || target); }
+
+function _superPropBase(object, property) { while (!Object.prototype.hasOwnProperty.call(object, property)) { object = _getPrototypeOf(object); if (object === null) break; } return object; }
+
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function"); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, writable: true, configurable: true } }); if (superClass) _setPrototypeOf(subClass, superClass); }
+
+function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf || function _setPrototypeOf(o, p) { o.__proto__ = p; return o; }; return _setPrototypeOf(o, p); }
+
+function _createSuper(Derived) { var hasNativeReflectConstruct = _isNativeReflectConstruct(); return function _createSuperInternal() { var Super = _getPrototypeOf(Derived), result; if (hasNativeReflectConstruct) { var NewTarget = _getPrototypeOf(this).constructor; result = Reflect.construct(Super, arguments, NewTarget); } else { result = Super.apply(this, arguments); } return _possibleConstructorReturn(this, result); }; }
+
+function _possibleConstructorReturn(self, call) { if (call && (_typeof(call) === "object" || typeof call === "function")) { return call; } return _assertThisInitialized(self); }
+
+function _assertThisInitialized(self) { if (self === void 0) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return self; }
+
+function _isNativeReflectConstruct() { if (typeof Reflect === "undefined" || !Reflect.construct) return false; if (Reflect.construct.sham) return false; if (typeof Proxy === "function") return true; try { Date.prototype.toString.call(Reflect.construct(Date, [], function () {})); return true; } catch (e) { return false; } }
+
+function _getPrototypeOf(o) { _getPrototypeOf = Object.setPrototypeOf ? Object.getPrototypeOf : function _getPrototypeOf(o) { return o.__proto__ || Object.getPrototypeOf(o); }; return _getPrototypeOf(o); }
+
+
+
+var PopupConfirm = /*#__PURE__*/function (_Popup) {
+  _inherits(PopupConfirm, _Popup);
+
+  var _super = _createSuper(PopupConfirm);
+
+  function PopupConfirm(popupSelector, handleSubmit) {
+    var _this;
+
+    _classCallCheck(this, PopupConfirm);
+
+    _this = _super.call(this, popupSelector);
+    _this._confirmBtn = _this._popupSelector.querySelector('.popup__submit-button_type_confirm');
+    _this._handleSubmit = handleSubmit;
+    return _this;
+  }
+
+  _createClass(PopupConfirm, [{
+    key: "open",
+    value: function open(card) {
+      _get(_getPrototypeOf(PopupConfirm.prototype), "open", this).call(this);
+
+      this._card = card;
+    }
+  }, {
+    key: "setEventListeners",
+    value: function setEventListeners() {
+      var _this2 = this;
+
+      this._confirmBtn.addEventListener('click', function (evt) {
+        evt.preventDefault();
+
+        _this2._handleSubmit(_this2._card);
+
+        _this2.close();
+      });
+
+      _get(_getPrototypeOf(PopupConfirm.prototype), "setEventListeners", this).call(this);
+    }
+  }]);
+
+  return PopupConfirm;
+}(_Popup_js__WEBPACK_IMPORTED_MODULE_0__["default"]);
 
 
 
