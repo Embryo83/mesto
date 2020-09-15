@@ -923,7 +923,7 @@ var Api = /*#__PURE__*/function () {
       if (res.ok) {
         return res.json();
       } else {
-        return Promise.reject('Ошибка сервера');
+        return Promise.reject("\u041E\u0448\u0438\u0431\u043A\u0430: ".concat(res.status));
       }
     }
   }, {
