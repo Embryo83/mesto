@@ -9,6 +9,7 @@
     background-image: url('../../../images/plus.svg');
     background-repeat: no-repeat;
     background-position: center;
+    margin-left: auto;
 }
 
 .profile__add-button:hover {
@@ -18,7 +19,8 @@
 
 @media screen and (max-width: 720px) {
     .profile__add-button {
-        margin-top: 36px;
+        margin: 0 auto;
         width: 282px;
+        max-width: 100%;
     }
 }

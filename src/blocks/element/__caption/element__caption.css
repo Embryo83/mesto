@@ -4,4 +4,5 @@
     background-color: white;
     color: black;
     padding: 25px 15px 31px 21px;
+    align-items: flex-end;
 }

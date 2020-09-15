@@ -4,8 +4,10 @@
     background-image: url(../../../images/like-button.svg);
     background-color: white;
     background-repeat: no-repeat;
-    background-position: center;
     width: 21px;
+    height: 18px;
+    margin-bottom: 3px;
+    padding: 0;
 }
 
 .element__like-button:hover {
