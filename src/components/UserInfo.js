@@ -1,5 +1,5 @@
 export default class UserInfo {
-  constructor ({profileName, profileJob}) {
+  constructor({ profileName, profileJob }) {
     this._name = document.querySelector(profileName);
     this._job = document.querySelector(profileJob);
   }
@@ -11,7 +11,7 @@ export default class UserInfo {
     return userData;
   }
 
-  setUserInfo({name, job}) {
+  setUserInfo({ name, job }) {
     this._name.textContent = name;
     this._job.textContent = job;
   }
