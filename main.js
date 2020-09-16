@@ -135,19 +135,19 @@ var linkInput = popupAdd.querySelector(".popup__input_type_link");
 var profileAvatar = document.querySelector(".profile__avatar"); // let userId = '5955e23ed94608a68dcb0e03';
 
 var apiConfig = {
-  baseUrl: 'https://mesto.nomoreparties.co/v1/cohort-15',
-  token: 'f1c23b59-12ef-41ca-b659-2fe3930a6862'
+  baseUrl: "https://mesto.nomoreparties.co/v1/cohort-15",
+  token: "f1c23b59-12ef-41ca-b659-2fe3930a6862"
 };
 var userConfig = {
-  profileName: '.profile__title',
-  profileJob: '.profile__subtitle'
+  profileName: ".profile__title",
+  profileJob: ".profile__subtitle"
 };
 var user = new _components_UserInfo_js__WEBPACK_IMPORTED_MODULE_7__["default"](userConfig);
-var openPopupImage = new _components_PopupWithImage_js__WEBPACK_IMPORTED_MODULE_5__["default"]('.popup_type_photo');
-var popupEditProfile = new _components_PopupWithForm_js__WEBPACK_IMPORTED_MODULE_6__["default"]('.popup_type_edit', editSubmitHandler);
-var popupAddCard = new _components_PopupWithForm_js__WEBPACK_IMPORTED_MODULE_6__["default"]('.popup_type_add', addCardSubmitHandler);
-var popupConfirmDelete = new _components_PopupConfirm_js__WEBPACK_IMPORTED_MODULE_9__["default"]('.popup_type_delete', confirmSubmitHandler);
-var popupChangeAvatar = new _components_PopupWithForm_js__WEBPACK_IMPORTED_MODULE_6__["default"]('.popup_type_avatar', avatarSubmitHandler);
+var openPopupImage = new _components_PopupWithImage_js__WEBPACK_IMPORTED_MODULE_5__["default"](".popup_type_photo");
+var popupEditProfile = new _components_PopupWithForm_js__WEBPACK_IMPORTED_MODULE_6__["default"](".popup_type_edit", editSubmitHandler);
+var popupAddCard = new _components_PopupWithForm_js__WEBPACK_IMPORTED_MODULE_6__["default"](".popup_type_add", addCardSubmitHandler);
+var popupConfirmDelete = new _components_PopupConfirm_js__WEBPACK_IMPORTED_MODULE_9__["default"](".popup_type_delete", confirmSubmitHandler);
+var popupChangeAvatar = new _components_PopupWithForm_js__WEBPACK_IMPORTED_MODULE_6__["default"](".popup_type_avatar", avatarSubmitHandler);
 var api = new _components_Api_js__WEBPACK_IMPORTED_MODULE_8__["default"](apiConfig);
 var userData = {};
 var cardsGrid = {};
@@ -158,18 +158,18 @@ Promise.all(getData).then(function (data) {
   userData = data[0];
   var cardsData = data[1];
   user.setUserInfo({
-    "name": userData.name,
-    "job": userData.about
+    name: userData.name,
+    job: userData.about
   });
   profileAvatar.src = userData.avatar;
   cardsGrid = new _components_Section_js__WEBPACK_IMPORTED_MODULE_4__["default"]({
     items: cardsData,
     renderer: function renderer(item) {
-      var card = new _components_Card_js__WEBPACK_IMPORTED_MODULE_1__["default"](item, '#elements-template', userData._id, openCardImage, openPopupConfirm, likeHandler);
+      var card = new _components_Card_js__WEBPACK_IMPORTED_MODULE_1__["default"](item, "#elements-template", userData._id, openCardImage, openPopupConfirm, likeHandler);
       var cardElement = card.generateCard();
       cardsGrid.addItem(cardElement);
     }
-  }, '.elements__list');
+  }, ".elements__list");
   cardsGrid.renderItems(); // слушатели попапов
 
   popupChangeAvatar.setEventListeners();
@@ -184,18 +184,18 @@ Promise.all(getData).then(function (data) {
   validationAddInput.enableValidation();
   var validationAvatarInput = new _components_FormValidator_js__WEBPACK_IMPORTED_MODULE_3__["default"](popupAvatar, object);
   validationAvatarInput.enableValidation();
-  openPopupEdit.addEventListener('click', function () {
+  openPopupEdit.addEventListener("click", function () {
     popupEditProfile.open();
     var userInfo = user.getUserInfo();
     nameInput.value = userInfo.name;
     jobInput.value = userInfo.job;
     validationEditInput.resetValidation();
   });
-  openPopupAdd.addEventListener('click', function () {
+  openPopupAdd.addEventListener("click", function () {
     popupAddCard.open();
     validationAddInput.resetValidation();
   });
-  openPopupAvatarEdit.addEventListener('click', function () {
+  openPopupAvatarEdit.addEventListener("click", function () {
     popupChangeAvatar.open();
     validationAvatarInput.resetValidation();
   });
@@ -211,7 +211,7 @@ function openPopupConfirm(id, evt) {
 
 
 function confirmSubmitHandler() {
-  popupConfirmDelete._confirmBtn.textContent = 'Удаление...';
+  popupConfirmDelete._confirmBtn.textContent = "Удаление...";
   api.deleteCard(popupConfirmDelete.cardId).then(function (_) {
     popupConfirmDelete.elem.remove();
     popupConfirmDelete.elem = null;
@@ -219,7 +219,7 @@ function confirmSubmitHandler() {
   }).catch(function (err) {
     console.log(err);
   }).finally(function () {
-    popupConfirmDelete._confirmBtn.textContent = 'Да';
+    popupConfirmDelete._confirmBtn.textContent = "Да";
   });
 } // функция обновления аватара
 
@@ -227,7 +227,7 @@ function confirmSubmitHandler() {
 function avatarSubmitHandler(data) {
   var _this = this;
 
-  popupChangeAvatar._submitBtn.textContent = 'Сохранение...';
+  popupChangeAvatar._submitBtn.textContent = "Сохранение...";
   api.editAvatar(data).then(function (res) {
     profileAvatar.src = res.avatar;
 
@@ -235,23 +235,23 @@ function avatarSubmitHandler(data) {
   }).catch(function (err) {
     console.log(err);
   }).finally(function () {
-    popupChangeAvatar._submitBtn.textContent = 'Сохранить';
+    popupChangeAvatar._submitBtn.textContent = "Сохранить";
   });
 } // функция лайков
 
 
 function likeHandler(id, evt) {
-  if (evt.target.classList.contains('element__like-button_active')) {
+  if (evt.target.classList.contains("element__like-button_active")) {
     api.deleteLike(id).then(function (res) {
       evt.target.nextElementSibling.textContent = res.likes.length;
-      evt.target.classList.remove('element__like-button_active');
+      evt.target.classList.remove("element__like-button_active");
     }).catch(function (err) {
       console.log(err);
     });
   } else {
     api.addLike(id).then(function (res) {
       evt.target.nextElementSibling.textContent = res.likes.length;
-      evt.target.classList.add('element__like-button_active');
+      evt.target.classList.add("element__like-button_active");
     }).catch(function (err) {
       console.log(err);
     });
@@ -278,7 +278,7 @@ function editSubmitHandler(data) {
   }).catch(function (err) {
     console.log(err);
   }).finally(function () {
-    popupEditProfile._submitBtn.textContent = 'Сохранить';
+    popupEditProfile._submitBtn.textContent = "Сохранить";
   });
 } // функция добавления новой карточки
 
@@ -286,7 +286,7 @@ function editSubmitHandler(data) {
 function addCardSubmitHandler(data) {
   var _this3 = this;
 
-  popupAddCard._submitBtn.textContent = 'Сохранение...';
+  popupAddCard._submitBtn.textContent = "Сохранение...";
   api.addNewCard(data.place, data.link).then(function (res) {
     var card = new _components_Card_js__WEBPACK_IMPORTED_MODULE_1__["default"]({
       name: res.name,
@@ -294,18 +294,19 @@ function addCardSubmitHandler(data) {
       likes: res.likes,
       owner: res.owner,
       _id: res._id
-    }, '#elements-template', userData._id, openCardImage, openPopupConfirm, likeHandler);
+    }, "#elements-template", userData._id, openCardImage, openPopupConfirm, likeHandler);
     var cardElement = card.generateCard();
     cardsGrid.addNewItem(cardElement);
 
     _this3.close();
+
+    placeInput.value = "";
+    linkInput.value = "";
   }).catch(function (err) {
     console.log(err);
   }).finally(function () {
-    popupAddCard._submitBtn.textContent = 'Сохранить';
+    popupAddCard._submitBtn.textContent = "Сохранить";
   });
-  placeInput.value = '';
-  linkInput.value = '';
 }
 
 /***/ }),
@@ -346,18 +347,18 @@ var Card = /*#__PURE__*/function () {
   _createClass(Card, [{
     key: "_getTemplate",
     value: function _getTemplate() {
-      return document.querySelector(this._cardSelector).content.querySelector('.element').cloneNode(true);
+      return document.querySelector(this._cardSelector).content.querySelector(".element").cloneNode(true);
     }
   }, {
     key: "_setEventListeners",
     value: function _setEventListeners(cardImage) {
       var _this = this;
 
-      this._card.querySelector('.element__like-button').addEventListener('click', function (evt) {
+      this._card.querySelector(".element__like-button").addEventListener("click", function (evt) {
         _this._likeHandler(_this._cardId, evt);
       });
 
-      cardImage.addEventListener('click', function () {
+      cardImage.addEventListener("click", function () {
         return _this._openCardImage(_this._name, _this._link);
       });
     }
@@ -368,11 +369,11 @@ var Card = /*#__PURE__*/function () {
 
       this._card = this._getTemplate();
 
-      var elemImage = this._card.querySelector('.element__item');
+      var elemImage = this._card.querySelector(".element__item");
 
-      var elemName = this._card.querySelector('.element__title');
+      var elemName = this._card.querySelector(".element__title");
 
-      var sumLikes = this._card.querySelector('.element__like-counter');
+      var sumLikes = this._card.querySelector(".element__like-counter");
 
       elemImage.src = this._link;
       elemImage.alt = this._name;
@@ -382,15 +383,15 @@ var Card = /*#__PURE__*/function () {
       if (this._likes.some(function (like) {
         return like._id === _this2._myId;
       })) {
-        this._card.querySelector('.element__like-button').classList.add('element__like-button_active');
+        this._card.querySelector(".element__like-button").classList.add("element__like-button_active");
       }
 
       if (this._myId === this._owner._id) {
-        this._card.querySelector('.element__delete-button').addEventListener("click", function (evt) {
+        this._card.querySelector(".element__delete-button").addEventListener("click", function (evt) {
           _this2._openPopupConfirm(_this2._cardId, evt);
         });
       } else {
-        this._card.querySelector('.element__delete-button').remove();
+        this._card.querySelector(".element__delete-button").remove();
       }
 
       this._setEventListeners(elemImage);
@@ -535,7 +536,7 @@ var FormValidator = /*#__PURE__*/function () {
       inputData.forEach(function (input) {
         input.classList.remove(_this2._inputErrorClass);
       });
-      var errorData = Array.from(this._formElement.querySelectorAll('.popup__error'));
+      var errorData = Array.from(this._formElement.querySelectorAll(".popup__error"));
       errorData.forEach(function (error) {
         error.classList.remove(_this2._errorClass);
         error.textContent = "";
@@ -697,25 +698,27 @@ var Popup = /*#__PURE__*/function () {
     _classCallCheck(this, Popup);
 
     this._popupSelector = document.querySelector(popupSelector);
+    this._handlerEscClose = this._handlerEscClose.bind(this);
+    this._closeByOverlay = this._closeByOverlay.bind(this);
   }
 
   _createClass(Popup, [{
     key: "open",
     value: function open() {
-      this._popupSelector.classList.add('popup_is-open');
+      this._popupSelector.classList.add("popup_is-open");
 
-      document.addEventListener('keydown', this._handlerEscClose.bind(this));
+      document.addEventListener("keydown", this._handlerEscClose);
 
-      this._popupSelector.addEventListener('click', this._closeByOverlay.bind(this));
+      this._popupSelector.addEventListener("click", this._closeByOverlay);
     }
   }, {
     key: "close",
     value: function close() {
       this._popupSelector.classList.remove("popup_is-open");
 
-      document.removeEventListener('keydown', this._handlerEscClose.bind(this));
+      document.removeEventListener("keydown", this._handlerEscClose);
 
-      this._popupSelector.removeEventListener('click', this._closeByOverlay.bind(this));
+      this._popupSelector.removeEventListener("click", this._closeByOverlay);
     }
   }, {
     key: "_handlerEscClose",
@@ -727,7 +730,7 @@ var Popup = /*#__PURE__*/function () {
   }, {
     key: "_closeByOverlay",
     value: function _closeByOverlay(evt) {
-      if (evt.target.classList.contains('popup')) {
+      if (evt.target.classList.contains("popup")) {
         this.close();
       }
     }
@@ -736,9 +739,9 @@ var Popup = /*#__PURE__*/function () {
     value: function setEventListeners() {
       var _this = this;
 
-      this._closeButton = this._popupSelector.querySelector('.popup__close-button');
+      this._closeButton = this._popupSelector.querySelector(".popup__close-button");
 
-      this._closeButton.addEventListener('click', function () {
+      this._closeButton.addEventListener("click", function () {
         _this.close();
       });
     }
@@ -796,9 +799,9 @@ var PopupWithForm = /*#__PURE__*/function (_Popup) {
     _classCallCheck(this, PopupWithForm);
 
     _this = _super.call(this, popupSelector);
-    _this._submitBtn = _this._popupSelector.querySelector('.popup__submit-button');
+    _this._submitBtn = _this._popupSelector.querySelector(".popup__submit-button");
     _this._formSubmitHandler = formSubmitHandler;
-    _this._popupForm = _this._popupSelector.querySelector('.popup__form');
+    _this._popupForm = _this._popupSelector.querySelector(".popup__form");
     _this._formSubmit = _this._formSubmit.bind(_assertThisInitialized(_this));
     return _this;
   }
@@ -808,7 +811,7 @@ var PopupWithForm = /*#__PURE__*/function (_Popup) {
     value: function _getInputValues() {
       var _this2 = this;
 
-      this._inputList = this._popupForm.querySelectorAll('.popup__input');
+      this._inputList = this._popupForm.querySelectorAll(".popup__input");
       this._formValues = {};
 
       this._inputList.forEach(function (item) {
@@ -830,7 +833,7 @@ var PopupWithForm = /*#__PURE__*/function (_Popup) {
     value: function setEventListeners() {
       _get(_getPrototypeOf(PopupWithForm.prototype), "setEventListeners", this).call(this);
 
-      this._popupForm.addEventListener('submit', this._formSubmit);
+      this._popupForm.addEventListener("submit", this._formSubmit);
     }
   }, {
     key: "close",
@@ -930,7 +933,7 @@ var Api = /*#__PURE__*/function () {
     key: "getUserInfo",
     value: function getUserInfo() {
       return fetch("".concat(this._baseUrl, "/users/me"), {
-        method: 'GET',
+        method: "GET",
         headers: {
           authorization: this._token
         }
@@ -950,10 +953,10 @@ var Api = /*#__PURE__*/function () {
     key: "addNewCard",
     value: function addNewCard(name, link) {
       return fetch("".concat(this._baseUrl, "/cards"), {
-        method: 'POST',
+        method: "POST",
         headers: {
           authorization: this._token,
-          'Content-Type': 'application/json'
+          "Content-Type": "application/json"
         },
         body: JSON.stringify({
           name: name,
@@ -965,7 +968,7 @@ var Api = /*#__PURE__*/function () {
     key: "deleteCard",
     value: function deleteCard(id) {
       return fetch("".concat(this._baseUrl, "/cards/").concat(id), {
-        method: 'DELETE',
+        method: "DELETE",
         headers: {
           authorization: this._token
         }
@@ -975,7 +978,7 @@ var Api = /*#__PURE__*/function () {
     key: "addLike",
     value: function addLike(id) {
       return fetch("".concat(this._baseUrl, "/cards/likes/").concat(id), {
-        method: 'PUT',
+        method: "PUT",
         headers: {
           authorization: this._token
         }
@@ -985,7 +988,7 @@ var Api = /*#__PURE__*/function () {
     key: "deleteLike",
     value: function deleteLike(id) {
       return fetch("".concat(this._baseUrl, "/cards/likes/").concat(id), {
-        method: 'DELETE',
+        method: "DELETE",
         headers: {
           authorization: this._token
         }
@@ -995,10 +998,10 @@ var Api = /*#__PURE__*/function () {
     key: "editProfile",
     value: function editProfile(name, about) {
       return fetch("".concat(this._baseUrl, "/users/me"), {
-        method: 'PATCH',
+        method: "PATCH",
         headers: {
           authorization: this._token,
-          'Content-Type': 'application/json'
+          "Content-Type": "application/json"
         },
         body: JSON.stringify({
           name: name,
@@ -1010,10 +1013,10 @@ var Api = /*#__PURE__*/function () {
     key: "editAvatar",
     value: function editAvatar(url) {
       return fetch("".concat(this._baseUrl, "/users/me/avatar"), {
-        method: 'PATCH',
+        method: "PATCH",
         headers: {
           authorization: this._token,
-          'Content-Type': 'application/json'
+          "Content-Type": "application/json"
         },
         body: JSON.stringify({
           avatar: url.link
@@ -1074,7 +1077,7 @@ var PopupConfirm = /*#__PURE__*/function (_Popup) {
     _classCallCheck(this, PopupConfirm);
 
     _this = _super.call(this, popupSelector);
-    _this._confirmBtn = _this._popupSelector.querySelector('.popup__submit-button_type_confirm');
+    _this._confirmBtn = _this._popupSelector.querySelector(".popup__submit-button_type_confirm");
     _this._handleSubmit = handleSubmit;
     return _this;
   }
@@ -1091,12 +1094,10 @@ var PopupConfirm = /*#__PURE__*/function (_Popup) {
     value: function setEventListeners() {
       var _this2 = this;
 
-      this._confirmBtn.addEventListener('click', function (evt) {
+      this._confirmBtn.addEventListener("click", function (evt) {
         evt.preventDefault();
 
         _this2._handleSubmit(_this2._card);
-
-        _this2.close();
       });
 
       _get(_getPrototypeOf(PopupConfirm.prototype), "setEventListeners", this).call(this);
