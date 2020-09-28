@@ -37,7 +37,7 @@
  * Скопировать проект git clone https://github.com/Embryo83/mesto.git
  * В редакторе установить зависимости `npm install`
  * Запустить проект локально для редактирования `npm run dev`
- * Собрать отовый проект `npm run build`
+ * Собрать готовый проект `npm run build`
  
  ### Контакты
  andrejrusty@icloud.com
