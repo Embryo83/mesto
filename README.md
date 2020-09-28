@@ -34,7 +34,7 @@
  
  ## Установка
  Для запуска проекта необходим предустановленный node.js.
- * Скопировать проект git clone https://github.com/Embryo83/mesto.git
+ * Скопировать проект `git clone https://github.com/Embryo83/mesto.git`
  * В редакторе установить зависимости `npm install`
  * Запустить проект локально для редактирования `npm run dev`
  * Собрать готовый проект `npm run build`
