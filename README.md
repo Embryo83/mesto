@@ -23,7 +23,14 @@
 
  [Ссылка на проект](https://embryo83.github.io/mesto/)
  
- ## Контакты
+ ## Установка
+ Для запуска проекта необходим установленный node.js.
+ * Скопировать проект git clone https://github.com/Embryo83/mesto.git
+ * В редакторе установить зависимости npm install
+ * Запустить проект локально для редактирования npm run dev
+ * Собрать отовый проект npm run build
+ 
+ ### Контакты
  andrejrusty@icloud.com
 
 
