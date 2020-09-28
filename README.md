@@ -40,8 +40,8 @@
  * Собрать готовый проект `npm run build`
  
  ## Figma
- * Макет 1 (https://www.figma.com/file/StZjf8HnoeLdiXS7dYrLAh/JavaScript.-Sprint-4)
- * Макет 2 (https://www.figma.com/file/nlYpT4VhFiwimn2YlncrcF/JavaScript.-Sprint-5?node-id=0%3A1)
+ * [Макет 1](https://www.figma.com/file/StZjf8HnoeLdiXS7dYrLAh/JavaScript.-Sprint-4)
+ * [Макет 2](https://www.figma.com/file/nlYpT4VhFiwimn2YlncrcF/JavaScript.-Sprint-5)
  
  ### Контакты
  andrejrusty@icloud.com
